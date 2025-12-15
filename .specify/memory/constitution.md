@@ -1,50 +1,61 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Productivity Toolchain Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Simplicity & Reliability First
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+The primary goal is to increase productivity, not maintain tools. We prioritize simplicity in design and implementation to minimize debugging time. Reliability is paramount; tools must work predictably every time. If a feature adds complexity that threatens reliability, it is rejected.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### II. Elegant TUI Experience
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+All user interfaces must be Text User Interfaces (TUI). They should be elegant, responsive, and intuitive. We value keyboard-centric workflows that enhance speed. Visuals should be clean and "touch" based where appropriate for a modern terminal experience.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### III. Seamless Integration
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+Our tools do not exist in a vacuum. They must integrate deeply and reliably with the user's existing ecosystem: Notion, GitHub, Solidtime, and Taskmaster. Data synchronization and API interactions must be robust to prevent workflow interruptions.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### IV. Go & Static Linking
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+All tools must be developed in Go. Deliverables must be statically linked executables. This ensures portability, ease of deployment, and elimination of "it works on my machine" dependency issues.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### V. Test-Driven Reliability
+
+To support Principle I, we adopt a strict testing culture. No code is merged without comprehensive unit and integration tests. We invest time in testing upfront to save time on debugging later.
+
+## Technical Constraints
+
+### Technology Stack
+
+- **Language**: Go (Latest Stable)
+- **Build Artifact**: Statically linked binaries
+- **UI Library**: Bubble Tea (or similar modern Go TUI framework) recommended for elegance.
+
+### Integration Standards
+
+- API clients for Notion, GitHub, Solidtime, etc., must handle rate limits and network failures gracefully.
+- Local caching should be used where appropriate to improve speed and resilience.
+
+## Development Workflow
+
+### Quality Gates
+
+1.  **Design Review**: Ensure TUI design is elegant and simple.
+2.  **Code Review**: Focus on simplicity and readability.
+3.  **Automated Tests**: CI must pass all tests before merge.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution serves as the supreme guidance for the Productivity Toolchain project.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+### Amendments
+
+- Any changes to these principles require a Pull Request with a clear rationale.
+- Versioning follows Semantic Versioning (MAJOR.MINOR.PATCH).
+- Major changes (removing or redefining principles) require a MAJOR version bump.
+
+### Compliance
+
+- All Feature Specifications and Implementation Plans must explicitly state how they adhere to these principles.
+- Non-compliant code will be rejected during review.
+
+**Version**: 1.0.0 | **Ratified**: 2025-12-16 | **Last Amended**: 2025-12-16
