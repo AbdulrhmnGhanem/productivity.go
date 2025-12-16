@@ -8,15 +8,15 @@
 **Purpose**: Project initialization and basic structure
 
 - [x] T001 Create project structure (`cmd/`, `internal/` packages)
-- [ ] T002 Initialize Go module and install dependencies (`cobra`, `viper`, `bubbletea`, `notionapi`, `go-duckdb`)
+- [x] T002 Initialize Go module and install dependencies (`cobra`, `viper`, `bubbletea`, `notionapi`, `go-duckdb`)
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 
 **Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
 
-- [ ] T003 Implement Configuration (`internal/config`): Load `.netrc` and `productivity.go.toml`
-- [ ] T004 Implement DuckDB Storage (`internal/storage`): Schema migration, `SaveUpsert`, `GetRandom`, `GetAll`
-- [ ] T005 Implement Notion Client (`internal/notion`): `FetchArticles` with "Done" checkbox filter
+- [x] T003 Implement Configuration (`internal/config`): Load `.netrc` and `productivity.go.toml`
+- [x] T004 Implement DuckDB Storage (`internal/storage`): Schema migration, `SaveUpsert`, `GetRandom`, `GetAll`
+- [x] T005 Implement Notion Client (`internal/notion`): `FetchArticles` with "Done" checkbox filter
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
@@ -26,9 +26,9 @@
 
 **Independent Test**: Run `readings setup` and verify config files are created
 
-- [ ] T006 [US4] Implement Setup Logic (`internal/setup`): Interactive prompt using Bubble Tea
-- [ ] T007 [US4] Implement Config Saving: Write to `.netrc` and `productivity.go.toml`
-- [ ] T008 [US4] Create `setup` command in `cmd/readings/setup.go`
+- [x] T006 [US4] Implement Setup Logic (`internal/setup`): Interactive prompt using Bubble Tea
+- [x] T007 [US4] Implement Config Saving: Write to `.netrc` and `productivity.go.toml`
+- [x] T008 [US4] Create `setup` command in `cmd/readings/setup.go`
 
 **Checkpoint**: User can configure the tool
 
@@ -38,9 +38,9 @@
 
 **Independent Test**: Run `readings` and see 7 articles
 
-- [ ] T009 [US1] Implement Readings Service (`internal/readings`): `GetReadings` logic (random selection)
-- [ ] T010 [US1] Implement Root Command (`cmd/readings/root.go`): Display list of articles
-- [ ] T011 [US1] Implement Auto-Fetch fallback: If DB empty, trigger sync (foreground)
+- [x] T009 [US1] Implement Readings Service (`internal/readings`): `GetReadings` logic (random selection)
+- [x] T010 [US1] Implement Root Command (`cmd/readings/root.go`): Display list of articles
+- [x] T011 [US1] Implement Auto-Fetch fallback: If DB empty, trigger sync (foreground)
 
 **Checkpoint**: Core value proposition delivered
 
@@ -50,8 +50,8 @@
 
 **Independent Test**: Run `readings --tag tech`
 
-- [ ] T012 [US2] Update Readings Service: Add tag filtering to `GetReadings` and Storage
-- [ ] T013 [US2] Update Root Command: Add `--tag` flag and pass to service
+- [x] T012 [US2] Update Readings Service: Add tag filtering to `GetReadings` and Storage
+- [x] T013 [US2] Update Root Command: Add `--tag` flag and pass to service
 
 **Checkpoint**: Filtering capability added
 
@@ -61,8 +61,8 @@
 
 **Independent Test**: Run command, wait, check DB for new articles
 
-- [ ] T014 [US3] Implement Sync Service (`internal/sync`): Orchestrate Notion -> DB sync
-- [ ] T015 [US3] Create hidden `sync` command in `cmd/readings/sync.go`
-- [ ] T016 [US3] Implement Detached Process Spawning: Trigger `readings sync` after root command finishes
+- [x] T014 [US3] Implement Sync Service (`internal/sync`): Orchestrate Notion -> DB sync
+- [x] T015 [US3] Create hidden `sync` command in `cmd/readings/sync.go`
+- [x] T016 [US3] Implement Detached Process Spawning: Trigger `readings sync` after root command finishes
 
 **Checkpoint**: Feature complete

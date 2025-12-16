@@ -15,11 +15,11 @@ A CLI tool `readings` to fetch articles from a Notion database, cache them local
 **Primary Dependencies**:
 
 - `github.com/jomei/notionapi` (Notion Integration)
-- `github.com/marcboeker/go-duckdb` (Local Persistence) [NEEDS CLARIFICATION: Static linking support?]
+- `modernc.org/sqlite` (Local Persistence) [Pure Go, Statically Linkable]
 - `github.com/spf13/cobra` (CLI Framework)
 - `github.com/charmbracelet/bubbletea` (TUI/Interactive Setup)
 - `github.com/spf13/viper` (Configuration)
-  **Storage**: DuckDB (Local file)
+  **Storage**: SQLite (Local file)
   **Testing**: Go `testing` package, `testify`
   **Target Platform**: Linux (CLI)
   **Project Type**: Single CLI application
@@ -33,7 +33,7 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 - [x] **Simplicity & Reliability**: CLI focus, local cache for reliability.
 - [x] **Elegant TUI**: Bubble Tea for setup and list display.
 - [x] **Seamless Integration**: Notion API, background sync.
-- [?] **Go & Static Linking**: DuckDB driver uses CGO. [NEEDS CLARIFICATION: Can we statically link DuckDB?]
+- [x] **Go & Static Linking**: Pure Go SQLite driver allows static linking.
 - [x] **Test-Driven Reliability**: Unit/Integration tests planned.
 
 ## Project Structure
@@ -59,9 +59,9 @@ cmd/
 internal/
 ├── config/             # Configuration loading (viper, .netrc)
 ├── notion/             # Notion API client wrapper
-├── storage/            # DuckDB implementation
+├── storage/            # SQLite implementation
 ├── sync/               # Background sync logic
-├── tui/                # Bubble Tea models
+├── setup/              # Bubble Tea models (Setup Wizard)
 └── readings/           # Core business logic (selection, filtering)
 ```
 
