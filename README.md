@@ -6,7 +6,9 @@ This repository is a collection of productivity tools written in Go.
 
 ### Readings
 
-**readings** is a terminal user interface (TUI) for browsing and managing your reading list stored in Notion. It allows you to view articles, filter them by tags, and open them in your default browser.
+**readings** is a terminal user interface (TUI) for browsing and managing my reading list stored in Notion. It allows me to view articles, filter them by tags, and open them in my default browser.
+
+[![asciicast](https://asciinema.org/a/QaCnT0bV1NVfudEFtJEzk3YDg.svg)](https://asciinema.org/a/QaCnT0bV1NVfudEFtJEzk3YDg)
 
 #### Installation
 
@@ -16,10 +18,15 @@ This repository is a collection of productivity tools written in Go.
 sudo dpkg -i readings_*.deb
 ```
 
-**Arch Linux**
+**Arch Linux / Manjaro**
 
 ```bash
+# Install from local file
 sudo pacman -U readings_*.pkg.tar.zst
+
+# Or install directly from GitHub Releases (replace version as needed)
+curl -LO https://github.com/AbdulrhmnGhanem/productivity.go/releases/download/v1.0.0/readings_1.0.0_linux_amd64.pkg.tar.zst
+sudo pacman -U readings_1.0.0_linux_amd64.pkg.tar.zst
 ```
 
 **Binary**
@@ -51,4 +58,4 @@ Download the binary for your architecture from the Releases page and place it in
 
 #### Configuration
 
-The application requires a Notion API key and Database ID. These can be configured via environment variables or a config file.
+The application requires a Notion API key and Database ID. These can be configured via environment variables or a config file using the `readings setup` command.
