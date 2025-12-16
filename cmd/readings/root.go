@@ -39,7 +39,7 @@ var rootCmd = &cobra.Command{
 		}
 		defer store.Close()
 
-		notionClient := notion.NewClient(cfg.NotionAPIKey, cfg.NotionDatabaseID)
+		notionClient := notion.NewClient(cfg.NotionAPIKey, cfg.NotionDatabaseID, cfg.NotionWeeksDBID)
 		svc := readings.NewService(store, notionClient)
 
 		// Launch TUI

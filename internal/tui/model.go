@@ -34,10 +34,15 @@ type Model struct {
 	width        int
 	height       int
 	inputBuffer  string // For Vim-style numeric commands
+	statusMessage string
 
 	// Services
 	svc *readings.Service
 }
+
+type ClearStatusMsg struct{}
+type StatusMsg string
+
 
 // InitTUI initializes the TUI model with data.
 func InitTUI(svc *readings.Service) (Model, error) {

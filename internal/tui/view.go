@@ -24,7 +24,14 @@ func (m Model) View() string {
 
 	help := m.helpView(styles)
 	
-	return lipgloss.JoinVertical(lipgloss.Left, content, help)
+	finalView := lipgloss.JoinVertical(lipgloss.Left, content, help)
+
+	if m.statusMessage != "" {
+		status := styles.Status.Render(m.statusMessage)
+		finalView = lipgloss.JoinVertical(lipgloss.Left, finalView, status)
+	}
+
+	return finalView
 }
 
 func (m Model) viewList(styles Styles) string {

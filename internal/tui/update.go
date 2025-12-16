@@ -1,12 +1,15 @@
 package tui
 
 import (
-"os/exec"
-"runtime"
-"strconv"
+	"context"
+	"fmt"
+	"os/exec"
+	"runtime"
+	"strconv"
+	"time"
 
-tea "github.com/charmbracelet/bubbletea"
-"productivity.go/internal/readings"
+	tea "github.com/charmbracelet/bubbletea"
+	"productivity.go/internal/readings"
 )
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -21,6 +24,14 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
 		m.height = msg.Height
+	case StatusMsg:
+		m.statusMessage = string(msg)
+		return m, tea.Tick(2*time.Second, func(_ time.Time) tea.Msg {
+			return ClearStatusMsg{}
+		})
+	case ClearStatusMsg:
+		m.statusMessage = ""
+		return m, nil
 	}
 
 	switch m.view {
@@ -123,11 +134,22 @@ if m.scrollOffset < 0 { m.scrollOffset = 0 }
 m.inputBuffer = ""
 
 case "enter":
-if len(m.filteredArticles) > 0 {
-m.view = ViewDetail
-}
-m.inputBuffer = ""
-case "/":
+			if len(m.filteredArticles) > 0 {
+				article := m.filteredArticles[m.cursor]
+				m.inputBuffer = ""
+				return m, func() tea.Msg {
+					added, err := m.svc.ToggleReadingInCurrentWeek(context.Background(), article.ID)
+					if err != nil {
+						return StatusMsg(fmt.Sprintf("Error: %v", err))
+					}
+					if added {
+						return StatusMsg("Added to reading list")
+					}
+					return StatusMsg("Removed from reading list")
+				}
+			}
+			m.inputBuffer = ""
+		case "/":
 // Enter filter mode
 m.view = ViewFilter
 m.backupSelectedTags = make(map[string]bool)

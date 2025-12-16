@@ -20,6 +20,7 @@ const (
 type Config struct {
 	NotionAPIKey     string
 	NotionDatabaseID string
+	NotionWeeksDBID  string
 }
 
 // Load reads configuration from .netrc and productivity.go.toml
@@ -61,6 +62,7 @@ func loadViperConfig(cfg *Config) error {
 	}
 
 	cfg.NotionDatabaseID = CleanDatabaseID(viper.GetString("notion_database_id"))
+	cfg.NotionWeeksDBID = CleanDatabaseID(viper.GetString("notion_weeks_db_id"))
 	return nil
 }
 
@@ -97,15 +99,18 @@ func (c *Config) Validate() error {
 	if c.NotionDatabaseID == "" {
 		return fmt.Errorf("Notion Database ID not found in %s", ConfigFileName)
 	}
+	if c.NotionWeeksDBID == "" {
+		return fmt.Errorf("Notion Weeks Database ID not found in %s", ConfigFileName)
+	}
 	return nil
 }
 
 // Save writes the configuration to disk
-func Save(apiKey, databaseID string) error {
+func Save(apiKey, databaseID, weeksDBID string) error {
 	if err := saveNetrc(apiKey); err != nil {
 		return fmt.Errorf("failed to save .netrc: %w", err)
 	}
-	if err := saveViper(databaseID); err != nil {
+	if err := saveViper(databaseID, weeksDBID); err != nil {
 		return fmt.Errorf("failed to save config file: %w", err)
 	}
 	return nil
@@ -146,7 +151,7 @@ func saveNetrc(apiKey string) error {
 	return os.WriteFile(netrcPath, data, 0600)
 }
 
-func saveViper(databaseID string) error {
+func saveViper(databaseID, weeksDBID string) error {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return err
@@ -157,6 +162,7 @@ func saveViper(databaseID string) error {
 	}
 
 	viper.Set("notion_database_id", databaseID)
+	viper.Set("notion_weeks_db_id", weeksDBID)
 	
 	// WriteConfigAs will overwrite or create
 	return viper.WriteConfigAs(filepath.Join(configDir, ConfigFileName))

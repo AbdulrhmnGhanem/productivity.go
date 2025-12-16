@@ -44,6 +44,19 @@ func (m *MockNotionClient) FetchArticles(ctx context.Context) ([]readings.Articl
 	return args.Get(0).([]readings.Article), args.Error(1)
 }
 
+func (m *MockNotionClient) FetchCurrentWeek(ctx context.Context) (*readings.Week, error) {
+	args := m.Called(ctx)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*readings.Week), args.Error(1)
+}
+
+func (m *MockNotionClient) UpdateWeekReadingList(ctx context.Context, weekPageID string, readingPageIDs []string) error {
+	args := m.Called(ctx, weekPageID, readingPageIDs)
+	return args.Error(0)
+}
+
 func TestGetReadings_CacheHit(t *testing.T) {
 	repo := new(MockRepository)
 	notion := new(MockNotionClient)
@@ -86,5 +99,43 @@ func TestGetReadings_CacheMiss_TriggersSync(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, fetchedArticles, articles)
 	repo.AssertExpectations(t)
+	notion.AssertExpectations(t)
+}
+
+func TestToggleReadingInCurrentWeek_Add(t *testing.T) {
+	repo := new(MockRepository)
+	notion := new(MockNotionClient)
+	svc := readings.NewService(repo, notion)
+
+	week := &readings.Week{
+		ID:             "week-1",
+		ReadingListIDs: []string{"article-1"},
+	}
+
+	notion.On("FetchCurrentWeek", mock.Anything).Return(week, nil)
+	notion.On("UpdateWeekReadingList", mock.Anything, "week-1", []string{"article-1", "article-2"}).Return(nil)
+
+	added, err := svc.ToggleReadingInCurrentWeek(context.Background(), "article-2")
+	assert.NoError(t, err)
+	assert.True(t, added)
+	notion.AssertExpectations(t)
+}
+
+func TestToggleReadingInCurrentWeek_Remove(t *testing.T) {
+	repo := new(MockRepository)
+	notion := new(MockNotionClient)
+	svc := readings.NewService(repo, notion)
+
+	week := &readings.Week{
+		ID:             "week-1",
+		ReadingListIDs: []string{"article-1", "article-2"},
+	}
+
+	notion.On("FetchCurrentWeek", mock.Anything).Return(week, nil)
+	notion.On("UpdateWeekReadingList", mock.Anything, "week-1", []string{"article-1"}).Return(nil)
+
+	added, err := svc.ToggleReadingInCurrentWeek(context.Background(), "article-2")
+	assert.NoError(t, err)
+	assert.False(t, added)
 	notion.AssertExpectations(t)
 }

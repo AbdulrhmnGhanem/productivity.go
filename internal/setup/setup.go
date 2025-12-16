@@ -28,9 +28,14 @@ func InitialModel() model {
 	tiDB.CharLimit = 100
 	tiDB.Width = 50
 
+	tiWeeksDB := textinput.New()
+	tiWeeksDB.Placeholder = "Notion Weeks Database ID"
+	tiWeeksDB.CharLimit = 100
+	tiWeeksDB.Width = 50
+
 	return model{
 		step:   0,
-		inputs: []textinput.Model{tiKey, tiDB},
+		inputs: []textinput.Model{tiKey, tiDB, tiWeeksDB},
 	}
 }
 
@@ -54,7 +59,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// Finished
 			apiKey := m.inputs[0].Value()
 			dbID := config.CleanDatabaseID(m.inputs[1].Value())
-			if err := config.Save(apiKey, dbID); err != nil {
+			weeksDBID := config.CleanDatabaseID(m.inputs[2].Value())
+			if err := config.Save(apiKey, dbID, weeksDBID); err != nil {
 				m.err = err
 				return m, tea.Quit
 			}
@@ -84,6 +90,9 @@ func (m model) View() string {
 	} else if m.step == 1 {
 		s += "Enter your Notion Database ID:\n"
 		s += m.inputs[1].View()
+	} else if m.step == 2 {
+		s += "Enter your Notion Weeks Database ID:\n"
+		s += m.inputs[2].View()
 	}
 
 	s += "\n\n(esc to quit)\n"

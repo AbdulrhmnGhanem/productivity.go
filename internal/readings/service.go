@@ -8,6 +8,8 @@ import (
 // NotionClient defines the interface for fetching articles from Notion.
 type NotionClient interface {
 	FetchArticles(ctx context.Context) ([]Article, error)
+	FetchCurrentWeek(ctx context.Context) (*Week, error)
+	UpdateWeekReadingList(ctx context.Context, weekPageID string, readingPageIDs []string) error
 }
 
 type Service struct {
@@ -62,4 +64,34 @@ func (s *Service) Sync(ctx context.Context) error {
 
 func (s *Service) GetAll(ctx context.Context) ([]Article, error) {
 	return s.repo.GetAll(ctx)
+}
+
+func (s *Service) ToggleReadingInCurrentWeek(ctx context.Context, articleID string) (bool, error) {
+	week, err := s.notion.FetchCurrentWeek(ctx)
+	if err != nil {
+		return false, err
+	}
+
+	// Check if article is already in the list
+	exists := false
+	var newIDs []string
+	for _, id := range week.ReadingListIDs {
+		if id == articleID {
+			exists = true
+		} else {
+			newIDs = append(newIDs, id)
+		}
+	}
+
+	added := false
+	if !exists {
+		newIDs = append(newIDs, articleID)
+		added = true
+	}
+
+	if err := s.notion.UpdateWeekReadingList(ctx, week.ID, newIDs); err != nil {
+		return false, err
+	}
+
+	return added, nil
 }

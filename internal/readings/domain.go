@@ -14,6 +14,12 @@ type Article struct {
 	FetchedAt time.Time `db:"fetched_at"`
 }
 
+// Week represents a weekly planning entry.
+type Week struct {
+	ID             string
+	ReadingListIDs []string
+}
+
 // Repository defines the interface for local storage.
 type Repository interface {
 	// SaveUpsert saves articles to the local cache, updating existing ones.

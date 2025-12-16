@@ -13,6 +13,7 @@ type Styles struct {
 	HelpBar      lipgloss.Style
 	HelpKey      lipgloss.Style
 	HelpDesc     lipgloss.Style
+	Status       lipgloss.Style
 }
 
 func DefaultStyles() Styles {
@@ -51,5 +52,9 @@ func DefaultStyles() Styles {
 		HelpDesc: lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#A8A8A8")).
 			PaddingRight(1),
+		Status: lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#FAFAFA")).
+			Background(lipgloss.Color("#04B575")).
+			Padding(0, 1),
 	}
 }
