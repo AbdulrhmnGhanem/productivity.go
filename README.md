@@ -8,7 +8,8 @@ This repository is a collection of productivity tools written in Go.
 
 **readings** is a terminal user interface (TUI) for browsing and managing my reading list stored in Notion. It allows me to view articles, filter them by tags, and open them in my default browser.
 
-<video src="docs/assets/readings-demo.mp4" controls title="Readings Demo"></video>
+https://github.com/user-attachments/assets/84841e06-13a6-44ad-9416-e64ebcf66b8a
+
 
 #### Installation
 
