@@ -3,7 +3,6 @@ package notion
 import (
 	"context"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/jomei/notionapi"
@@ -114,10 +113,6 @@ func (c *Client) FetchCurrentWeek(ctx context.Context) (*readings.Week, error) {
 		return nil, fmt.Errorf("failed to query weeks database: %w", err)
 	}
 
-	f, _ := os.OpenFile("debug.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	fmt.Fprintf(f, "Query returned %d results\n", len(resp.Results))
-	f.Close()
-
 	for _, page := range resp.Results {
 		if prop, ok := page.Properties["🗓️ Span"].(*notionapi.DateProperty); ok {
 			if prop.Date.Start != nil {
@@ -129,25 +124,16 @@ func (c *Client) FetchCurrentWeek(ctx context.Context) (*readings.Week, error) {
 					// If no end date, assume it covers the start day
 					end = start.Add(24 * time.Hour)
 				}
-				
+
 				// Adjust end to be end of the day if it's 00:00:00
 				if end.Hour() == 0 && end.Minute() == 0 && end.Second() == 0 {
 					end = end.Add(24 * time.Hour).Add(-1 * time.Second)
 				}
 
-				// Debug logging
-				f, _ := os.OpenFile("debug.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-				fmt.Fprintf(f, "Checking week: %s [%s - %s] vs Now: %s\n", page.ID, start, end, now)
-				f.Close()
-
 				if !now.Before(start) && !now.After(end) {
 					return parseWeek(page)
 				}
 			}
-		} else {
-			f, _ := os.OpenFile("debug.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-			fmt.Fprintf(f, "Page %s does not have '🗓️ Span' date property. Keys: %v\n", page.ID, getKeys(page.Properties))
-			f.Close()
 		}
 	}
 

@@ -13,8 +13,9 @@ type NotionClient interface {
 }
 
 type Service struct {
-	repo   Repository
-	notion NotionClient
+	repo        Repository
+	notion      NotionClient
+	currentWeek *Week
 }
 
 func NewService(repo Repository, notion NotionClient) *Service {
@@ -67,15 +68,18 @@ func (s *Service) GetAll(ctx context.Context) ([]Article, error) {
 }
 
 func (s *Service) ToggleReadingInCurrentWeek(ctx context.Context, articleID string) (bool, error) {
-	week, err := s.notion.FetchCurrentWeek(ctx)
-	if err != nil {
-		return false, err
+	if s.currentWeek == nil {
+		week, err := s.notion.FetchCurrentWeek(ctx)
+		if err != nil {
+			return false, err
+		}
+		s.currentWeek = week
 	}
 
 	// Check if article is already in the list
 	exists := false
 	var newIDs []string
-	for _, id := range week.ReadingListIDs {
+	for _, id := range s.currentWeek.ReadingListIDs {
 		if id == articleID {
 			exists = true
 		} else {
@@ -89,9 +93,12 @@ func (s *Service) ToggleReadingInCurrentWeek(ctx context.Context, articleID stri
 		added = true
 	}
 
-	if err := s.notion.UpdateWeekReadingList(ctx, week.ID, newIDs); err != nil {
+	if err := s.notion.UpdateWeekReadingList(ctx, s.currentWeek.ID, newIDs); err != nil {
 		return false, err
 	}
+
+	// Update cache
+	s.currentWeek.ReadingListIDs = newIDs
 
 	return added, nil
 }
